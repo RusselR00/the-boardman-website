@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Board-Man | Strategic Financial Solutions</title>
+    
+    <!-- Performance Optimization -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-navy': '#0D2F56',
+                        'brand-blue': '#4A90E2',
+                        'brand-blue-dark': '#357ABD'
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-in': 'slideIn 0.3s ease-out',
+                        'bounce-gentle': 'bounceGentle 2s infinite'
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            'from': { opacity: 0, transform: 'translateY(20px)' },
+                            'to': { opacity: 1, transform: 'translateY(0)' },
+                        },
+                        slideIn: {
+                            'from': { transform: 'translateX(-100%)', opacity: 0 },
+                            'to': { transform: 'translateX(0)', opacity: 1 },
+                        },
+                        bounceGentle: {
+                            '0%, 20%, 50%, 80%, 100%': { transform: 'translateY(0)' },
+                            '40%': { transform: 'translateY(-5px)' },
+                            '60%': { transform: 'translateY(-3px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Page transition styles */
+        .page-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .nav-link-active {
+            color: #4A90E2 !important;
+            font-weight: 600;
+        }
+        
+        .tab-active {
+            border-bottom-color: #4A90E2 !important;
+            color: #0D2F56 !important;
+            font-weight: 600;
+        }
+        
+        /* Enhanced mobile menu animation */
+        .mobile-menu-enter {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        /* Touch-friendly hover effects */
+        @media (hover: hover) {
+            .hover-lift:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            }
+        }
+        
+        /* Improved focus states for accessibility */
+        .focus-visible:focus-visible {
+            outline: 2px solid #4A90E2;
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+        
+        /* Lazy loading styles */
+        .lazy-load {
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+        }
+        
+        .lazy-load.loaded {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 overflow-x-hidden">
+
+    <!-- Mobile-First Header -->
+    <header class="bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-50 border-b border-gray-100">
+        <div class="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <a href="#" class="text-xl sm:text-2xl font-bold text-brand-navy focus-visible" onclick="showPage('home')">
+                    The Board-Man
+                </a>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden lg:flex items-center space-x-6 xl:space-x-8">
+                    <a href="#" id="nav-home" class="nav-link text-gray-600 hover:text-brand-blue transition duration-300 focus-visible" onclick="showPage('home')">Home</a>
+                    <a href="#" id="nav-about" class="nav-link text-gray-600 hover:text-brand-blue transition duration-300 focus-visible" onclick="showPage('about')">About</a>
+                    <a href="#" id="nav-services" class="nav-link text-gray-600 hover:text-brand-blue transition duration-300 focus-visible" onclick="showPage('services')">Services</a>
+                    <a href="#" id="nav-resources" class="nav-link text-gray-600 hover:text-brand-blue transition duration-300 focus-visible" onclick="showPage('resources')">Resources</a>
+                    <a href="#" id="nav-downloads" class="nav-link text-gray-600 hover:text-brand-blue transition duration-300 focus-visible" onclick="showPage('downloads')">Downloads</a>
+                    <a href="#" id="nav-blog" class="nav-link text-gray-600 hover:text-brand-blue transition duration-300 focus-visible" onclick="showPage('blog')">Blog</a>
+                    <a href="#" id="nav-contact" class="nav-link text-gray-600 hover:text-brand-blue transition duration-300 focus-visible" onclick="showPage('contact')">Contact</a>
+                </nav>
+
+                <!-- CTA Button -->
+                <button onclick="showPage('contact')" class="hidden lg:inline-block bg-brand-blue text-white font-semibold px-5 py-2 rounded-lg hover:bg-brand-blue-dark transition duration-300 shadow-sm focus-visible text-sm xl:text-base">
+                    Get Consultation
+                </button>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition duration-200 focus-visible" aria-label="Toggle menu">
+                    <svg class="w-6 h-6 text-brand-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Enhanced Mobile Menu -->
+            <div id="mobile-menu" class="hidden lg:hidden mt-4 pb-4 space-y-1">
+                <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-brand-blue rounded-lg transition duration-200" onclick="showPage('home')">Home</a>
+                <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-brand-blue rounded-lg transition duration-200" onclick="showPage('about')">About</a>
+                <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-brand-blue rounded-lg transition duration-200" onclick="showPage('services')">Services</a>
+                <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-brand-blue rounded-lg transition duration-200" onclick="showPage('resources')">Resources</a>
+                <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-brand-blue rounded-lg transition duration-200" onclick="showPage('downloads')">Downloads</a>
+                <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-brand-blue rounded-lg transition duration-200" onclick="showPage('blog')">Blog</a>
+                <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-brand-blue rounded-lg transition duration-200" onclick="showPage('contact')">Contact</a>
+                <div class="px-4 pt-2">
+                    <button onclick="showPage('contact')" class="w-full bg-brand-blue text-white font-semibold px-6 py-3 rounded-lg hover:bg-brand-blue-dark transition duration-300 shadow-lg text-center">
+                        Get Consultation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="min-h-screen">
+
+        <!-- Home Page -->
+        <div id="page-home" class="page-content">
+            <!-- Hero Section -->
+            <section class="bg-gradient-to-br from-white to-gray-50 relative overflow-hidden">
+                <div class="container mx-auto px-4 sm:px-6 py-12 sm:py-16 lg:py-24 text-center">
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-brand-navy leading-tight mb-6">
+                        Strategic Financial Solutions<br class="hidden sm:block">
+                        <span class="text-brand-blue">for Modern Businesses</span>
+                    </h1>
+                    <p class="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-8 sm:mb-10">
+                        Clarity, Compliance, and Growth. Delivered with Excellence.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button onclick="showPage('services')" class="bg-brand-blue text-white font-semibold px-8 py-4 rounded-lg hover:bg-brand-blue-dark transition duration-300 shadow-lg text-lg animate-bounce-gentle">
+                            Explore Services
+                        </button>
+                        <button onclick="showPage('contact')" class="border-2 border-brand-navy text-brand-navy font-semibold px-8 py-4 rounded-lg hover:bg-brand-navy hover:text-white transition duration-300">
+                            Free Consultation
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Services Overview -->
+            <section class="py-12 sm:py-16 lg:py-20">
+                <div class="container mx-auto px-4 sm:px-6">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-center text-brand-navy mb-8 sm:mb-12">Our Core Expertise</h2>
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg hover-lift transition-all duration-300 text-center">
+                            <div class="w-16 h-16 bg-brand-blue/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-8 h-8 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-brand-navy mb-4">Tax Compliance</h3>
+                            <p class="text-gray-600 mb-6">Complete tax solutions ensuring accuracy and timely compliance with all regulations.</p>
+                            <button onclick="showPage('services', 'tax')" class="font-semibold text-brand-blue hover:text-brand-blue-dark transition duration-200">Learn More &rarr;</button>
+                        </div>
+                        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg hover-lift transition-all duration-300 text-center">
+                            <div class="w-16 h-16 bg-brand-blue/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-8 h-8 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-brand-navy mb-4">Audit & Assurance</h3>
+                            <p class="text-gray-600 mb-6">Independent audit services providing confidence in your financial statements.</p>
+                            <button onclick="showPage('services', 'audit')" class="font-semibold text-brand-blue hover:text-brand-blue-dark transition duration-200">Learn More &rarr;</button>
+                        </div>
+                        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg hover-lift transition-all duration-300 text-center sm:col-span-2 lg:col-span-1">
+                            <div class="w-16 h-16 bg-brand-blue/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-8 h-8 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-brand-navy mb-4">Business Advisory</h3>
+                            <p class="text-gray-600 mb-6">Strategic guidance to drive growth and optimize business performance.</p>
+                            <button onclick="showPage('services', 'advisory')" class="font-semibold text-brand-blue hover:text-brand-blue-dark transition duration-200">Learn More &rarr;</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Why Choose Us -->
+            <section class="bg-white py-12 sm:py-16 lg:py-20">
+                <div class="container mx-auto px-4 sm:px-6">
+                    <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                        <div class="order-2 lg:order-1">
+                            <img src="https://placehold.co/600x400/E2E8F0/333333?text=Professional+Team" alt="Professional Team Meeting" class="rounded-xl shadow-xl w-full lazy-load">
+                        </div>
+                        <div class="order-1 lg:order-2">
+                            <h2 class="text-2xl sm:text-3xl font-bold text-brand-navy mb-6">Your Partner in Financial Excellence</h2>
+                            <p class="text-gray-600 mb-8 text-base sm:text-lg">More than accountants - we're your strategic partners committed to your success with trust, expertise, and deep corporate understanding.</p>
+                            <div class="space-y-4 mb-8">
+                                <div class="flex items-start"><div class="flex-shrink-0 w-6 h-6 bg-brand-blue/10 rounded-full flex items-center justify-center mt-1"><svg class="w-4 h-4 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div><div class="ml-4"><h4 class="font-semibold text-brand-navy">Client-Centric Approach</h4><p class="text-gray-600 text-sm sm:text-base">Your goals drive our strategies and solutions</p></div></div>
+                                <div class="flex items-start"><div class="flex-shrink-0 w-6 h-6 bg-brand-blue/10 rounded-full flex items-center justify-center mt-1"><svg class="w-4 h-4 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div><div class="ml-4"><h4 class="font-semibold text-brand-navy">Expert Team</h4><p class="text-gray-600 text-sm sm:text-base">Seasoned professionals with extensive experience</p></div></div>
+                                <div class="flex items-start"><div class="flex-shrink-0 w-6 h-6 bg-brand-blue/10 rounded-full flex items-center justify-center mt-1"><svg class="w-4 h-4 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div><div class="ml-4"><h4 class="font-semibold text-brand-navy">Industry Focus</h4><p class="text-gray-600 text-sm sm:text-base">Specialized knowledge for actionable insights</p></div></div>
+                            </div>
+                            <button onclick="showPage('about')" class="border-2 border-brand-navy text-brand-navy font-semibold px-6 py-3 rounded-lg hover:bg-brand-navy hover:text-white transition duration-300">Meet Our Team</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- CTA Section -->
+            <section class="bg-gradient-to-r from-brand-navy to-brand-blue text-white py-12 sm:py-16">
+                <div class="container mx-auto px-4 sm:px-6 text-center">
+                    <h2 class="text-2xl sm:text-3xl font-bold mb-4">Ready to Transform Your Financial Operations?</h2>
+                    <p class="text-lg sm:text-xl text-blue-100 mb-8 max-w-2xl mx-auto">Schedule a free consultation and discover how we can help your business thrive.</p>
+                    <button onclick="showPage('contact')" class="bg-white text-brand-navy font-semibold px-8 py-4 rounded-lg hover:bg-gray-100 transition duration-300 shadow-lg text-lg">Get Started Today</button>
+                </div>
+            </section>
+        </div>
+
+        <!-- About Page -->
+        <div id="page-about" class="page-content">
+            <section class="py-12 sm:py-16 lg:py-20 bg-white">
+                <div class="container mx-auto px-4 sm:px-6">
+                    <div class="text-center mb-12 sm:mb-16">
+                        <h1 class="text-3xl sm:text-4xl font-bold text-brand-navy mb-4">About The Board-Man</h1>
+                        <p class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">Our story, our values, and our commitment to excellence.</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 sm:p-8 lg:p-10 rounded-xl shadow-inner mb-12 sm:mb-16">
+                        <h2 class="text-xl sm:text-2xl font-bold text-brand-navy mb-4">Our Story</h2>
+                        <p class="text-gray-700 leading-relaxed">[Founded with a vision to revolutionize financial consulting, The Board-Man has been at the forefront of delivering exceptional accounting and advisory services. Our journey began with a simple belief - that every business deserves access to top-tier financial expertise that drives growth and ensures compliance.]</p>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6 sm:gap-8 lg:gap-10 mb-12 sm:mb-16">
+                        <div class="bg-gray-50 p-6 sm:p-8 lg:p-10 rounded-xl shadow-inner"><h2 class="text-xl sm:text-2xl font-bold text-brand-navy mb-4">Our Mission</h2><p class="text-gray-700 leading-relaxed">[To provide exceptional, client-focused financial and advisory services that empower businesses to achieve compliance, efficiency, and sustainable growth through innovative solutions and expert guidance.]</p></div>
+                        <div class="bg-gray-50 p-6 sm:p-8 lg:p-10 rounded-xl shadow-inner"><h2 class="text-xl sm:text-2xl font-bold text-brand-navy mb-4">Our Vision</h2><p class="text-gray-700 leading-relaxed">[To be the most trusted and respected CA firm in the region, renowned for our integrity, expertise, and transformative impact on our clients' success in the evolving business landscape.]</p></div>
+                    </div>
+                </div>
+            </section>
+            <section class="py-12 sm:py-16 lg:py-20">
+                <div class="container mx-auto px-4 sm:px-6">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-center text-brand-navy mb-8 sm:mb-12">Meet Our Experts</h2>
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                        <div class="bg-white rounded-xl shadow-lg p-6 text-center hover-lift transition-all duration-300">
+                            <img src="https://placehold.co/150x150/4A90E2/FFFFFF?text=Photo" alt="Team Member" class="w-24 h-24 sm:w-32 sm:h-32 rounded-full mx-auto mb-4 border-4 border-white shadow-md lazy-load">
+                            <h3 class="text-lg sm:text-xl font-bold text-brand-navy">[Founder's Name]</h3>
+                            <p class="text-gray-500 mb-2">[Founder & Principal CA]</p>
+                            <p class="font-semibold text-brand-blue mb-4">[ACA, B.Com]</p>
+                            <p class="text-gray-600 text-sm sm:text-base">[Leading expert in taxation and business advisory with over 15 years of experience helping businesses navigate complex financial landscapes.]</p>
+                        </div>
+                        <div class="bg-white rounded-xl shadow-lg p-6 text-center hover-lift transition-all duration-300">
+                            <img src="https://placehold.co/150x150/4A90E2/FFFFFF?text=Photo" alt="Team Member" class="w-24 h-24 sm:w-32 sm:h-32 rounded-full mx-auto mb-4 border-4 border-white shadow-md lazy-load">
+                            <h3 class="text-lg sm:text-xl font-bold text-brand-navy">[Key Member's Name]</h3>
+                            <p class="text-gray-500 mb-2">[Head of Audit]</p>
+                            <p class="font-semibold text-brand-blue mb-4">[ACA, M.Com]</p>
+                            <p class="text-gray-600 text-sm sm:text-base">[Specializes in audit and assurance services with a keen eye for detail and commitment to maintaining the highest standards of financial integrity.]</p>
+                        </div>
+                        <div class="bg-white rounded-xl shadow-lg p-6 text-center hover-lift transition-all duration-300 sm:col-span-2 lg:col-span-1">
+                            <img src="https://placehold.co/150x150/4A90E2/FFFFFF?text=Photo" alt="Team Member" class="w-24 h-24 sm:w-32 sm:h-32 rounded-full mx-auto mb-4 border-4 border-white shadow-md lazy-load">
+                            <h3 class="text-lg sm:text-xl font-bold text-brand-navy">[Key Member's Name]</h3>
+                            <p class="text-gray-500 mb-2">[GST & Tax Specialist]</p>
+                            <p class="font-semibold text-brand-blue mb-4">[ACA, B.Com]</p>
+                            <p class="text-gray-600 text-sm sm:text-base">[A dedicated expert in GST and indirect taxation, helping clients navigate the complexities of compliance with ease and precision.]</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Services Page -->
+        <div id="page-services" class="page-content">
+            <section class="py-12 sm:py-16 lg:py-20">
+                <div class="container mx-auto px-4 sm:px-6">
+                    <h1 class="text-3xl sm:text-4xl font-bold text-center text-brand-navy mb-4">Our Services</h1>
+                    <p class="text-lg sm:text-xl text-center text-gray-600 max-w-3xl mx-auto mb-12 sm:mb-16">[Comprehensive solutions to meet all your financial and compliance needs.]</p>
+                    <div class="bg-white rounded-xl shadow-xl p-4 md:p-8">
+                        <div class="border-b border-gray-200 mb-8"><nav class="flex flex-wrap -mb-px" id="service-tabs"><a href="#" class="service-tab tab-active whitespace-nowrap py-4 px-6 border-b-2 font-medium text-lg" data-tab="tax">Taxation</a><a href="#" class="service-tab text-gray-500 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-lg" data-tab="audit">Audit & Assurance</a><a href="#" class="service-tab text-gray-500 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-lg" data-tab="advisory">Advisory & Compliance</a></nav></div>
+                        <div id="tab-content">
+                            <div class="tab-pane active" id="tab-tax"><div class="space-y-6"><h3 class="text-2xl font-bold text-brand-navy">GST Registration & Filing</h3><p class="text-gray-700">[1-2 paragraphs explaining the service.]</p><p><strong>Availability:</strong> [Businesses]</p><p><strong>Documents Required:</strong> <span class="text-gray-600">[PAN Card, Aadhaar Card...]</span></p><hr><h3 class="text-2xl font-bold text-brand-navy">Personal Income Tax</h3><p class="text-gray-700">[1-2 paragraphs explaining the service.]</p><p><strong>Availability:</strong> [Individuals]</p><p><strong>Documents Required:</strong> <span class="text-gray-600">[PAN, Aadhaar, Form 16...]</span></p></div></div>
+                            <div class="tab-pane" id="tab-audit" style="display: none;"><div class="space-y-6"><h3 class="text-2xl font-bold text-brand-navy">Statutory Audit</h3><p class="text-gray-700">[1-2 paragraphs explaining the service.]</p><p><strong>Availability:</strong> [Businesses, Large Firms]</p><p><strong>Documents Required:</strong> <span class="text-gray-600">[Financial Statements...]</span></p></div></div>
+                            <div class="tab-pane" id="tab-advisory" style="display: none;"><div class="space-y-6"><h3 class="text-2xl font-bold text-brand-navy">Company Setup & Compliance</h3><p class="text-gray-700">[1-2 paragraphs explaining the service.]</p><p><strong>Availability:</strong> [Startups, Businesses]</p><p><strong>Documents Required:</strong> <span class="text-gray-600">[Director's ID/Address Proof...]</span></p></div></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Client Resources Page -->
+        <div id="page-resources" class="page-content">
+            <section class="py-12 sm:py-16 lg:py-20">
+                <div class="container mx-auto px-4 sm:px-6">
+                    <h1 class="text-3xl sm:text-4xl font-bold text-center text-brand-navy mb-4">Client Resource Center</h1>
+                    <p class="text-lg sm:text-xl text-center text-gray-600 max-w-3xl mx-auto mb-12 sm:mb-16">[Your financial knowledge base. Find answers to common questions.]</p>
+                    <div class="max-w-4xl mx-auto" id="faq-accordion">
+                        <div class="bg-white rounded-lg shadow-md mb-4"><button class="accordion-header w-full flex justify-between items-center text-left p-6"><span class="text-lg font-semibold text-brand-navy">[What are the deadlines for ITR filing?]</span><span class="accordion-icon text-2xl text-brand-blue">&plus;</span></button><div class="accordion-content max-h-0 overflow-hidden transition-all duration-500 ease-in-out"><div class="p-6 pt-0 text-gray-700"><p>[Provide a clear, concise answer.]</p><div class="mt-4 text-sm"><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full">ITR</span><span class="bg-gray-200 text-gray-800 px-2 py-1 rounded-full">Deadlines</span></div></div></div></div>
+                        <div class="bg-white rounded-lg shadow-md mb-4"><button class="accordion-header w-full flex justify-between items-center text-left p-6"><span class="text-lg font-semibold text-brand-navy">[Is GST registration mandatory?]</span><span class="accordion-icon text-2xl text-brand-blue">&plus;</span></button><div class="accordion-content max-h-0 overflow-hidden transition-all duration-500 ease-in-out"><div class="p-6 pt-0 text-gray-700"><p>[Provide a clear, concise answer.]</p><div class="mt-4 text-sm"><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full">GST</span><span class="bg-gray-200 text-gray-800 px-2 py-1 rounded-full">Eligibility</span></div></div></div></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <!-- Downloads Page -->
+        <div id="page-downloads" class="page-content">
+            <section class="py-12 sm:py-16 lg:py-20 bg-white">
+                <div class="container mx-auto px-4 sm:px-6">
+                    <div class="text-center mb-12 sm:mb-16">
+                        <h1 class="text-3xl sm:text-4xl font-bold text-brand-navy mb-4">Downloads</h1>
+                        <p class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">Access essential documents, forms, and calendars to stay compliant and informed.</p>
+                    </div>
+                    <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-6">
+                        <div class="bg-gray-50 p-6 rounded-lg flex items-center justify-between hover:shadow-md transition-shadow duration-300"><div><h3 class="font-bold text-brand-navy">Annual Tax Calendar 2025-26</h3><p class="text-gray-600 text-sm">Key deadlines for income tax and GST.</p></div><a href="#" class="ml-4 flex-shrink-0 bg-brand-blue text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-brand-blue-dark transition">Download</a></div>
+                        <div class="bg-gray-50 p-6 rounded-lg flex items-center justify-between hover:shadow-md transition-shadow duration-300"><div><h3 class="font-bold text-brand-navy">Client Onboarding Form</h3><p class="text-gray-600 text-sm">New client information and checklist.</p></div><a href="#" class="ml-4 flex-shrink-0 bg-brand-blue text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-brand-blue-dark transition">Download</a></div>
+                        <div class="bg-gray-50 p-6 rounded-lg flex items-center justify-between hover:shadow-md transition-shadow duration-300"><div><h3 class="font-bold text-brand-navy">GST Checklist for Businesses</h3><p class="text-gray-600 text-sm">Ensure your business is GST compliant.</p></div><a href="#" class="ml-4 flex-shrink-0 bg-brand-blue text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-brand-blue-dark transition">Download</a></div>
+                        <div class="bg-gray-50 p-6 rounded-lg flex items-center justify-between hover:shadow-md transition-shadow duration-300"><div><h3 class="font-bold text-brand-navy">Firm Brochure</h3><p class="text-gray-600 text-sm">An overview of our services and values.</p></div><a href="#" class="ml-4 flex-shrink-0 bg-brand-blue text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-brand-blue-dark transition">Download</a></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Blog Page -->
+        <div id="page-blog" class="page-content">
+            <section class="py-12 sm:py-16 lg:py-20">
+                <div class="container mx-auto px-4 sm:px-6">
+                    <h1 class="text-3xl sm:text-4xl font-bold text-center text-brand-navy mb-4">News & Insights</h1>
+                    <p class="text-lg sm:text-xl text-center text-gray-600 max-w-3xl mx-auto mb-12 sm:mb-16">[Stay updated with the latest financial news, tax updates, and expert analysis.]</p>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover-lift transition-all duration-300"><img src="https://placehold.co/600x400/E2E8F0/333333?text=Blog+Image" alt="Blog Post" class="w-full h-48 object-cover lazy-load"><div class="p-6"><p class="text-sm text-gray-500 mb-2">[Date Published]</p><h3 class="text-xl font-bold text-brand-navy mb-4">[Blog Post Title]</h3><p class="text-gray-600 mb-4">[Excerpt goes here...]</p><a href="#" class="font-semibold text-brand-blue hover:underline">Read More &rarr;</a></div></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Contact Page -->
+        <div id="page-contact" class="page-content">
+            <section class="py-12 sm:py-16 lg:py-20 bg-white">
+                <div class="container mx-auto px-4 sm:px-6">
+                    <h1 class="text-3xl sm:text-4xl font-bold text-center text-brand-navy mb-4">Get In Touch</h1>
+                    <p class="text-lg sm:text-xl text-center text-gray-600 max-w-3xl mx-auto mb-12 sm:mb-16">[We're here to help. Reach out for queries or to schedule a consultation.]</p>
+                    <div class="grid md:grid-cols-2 gap-12">
+                        <div class="bg-gray-50 p-8 rounded-lg shadow-inner"><h2 class="text-2xl font-bold text-brand-navy mb-6">Send Us a Message</h2><form action="#" method="POST"><div class="mb-4"><label for="name" class="block text-gray-700 font-medium mb-2">Full Name</label><input type="text" id="name" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue"></div><div class="mb-4"><label for="email" class="block text-gray-700 font-medium mb-2">Email</label><input type="email" id="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue"></div><div class="mb-4"><label for="service" class="block text-gray-700 font-medium mb-2">Service of Interest</label><select id="service" name="service" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue"><option>[Taxation]</option><option>[Audit & Assurance]</option><option>[Advisory & Compliance]</option></select></div><div class="mb-4"><label for="message" class="block text-gray-700 font-medium mb-2">Your Message</label><textarea id="message" name="message" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue"></textarea></div><button type="submit" class="w-full bg-brand-blue text-white font-semibold py-3 rounded-lg hover:bg-brand-blue-dark transition duration-300 shadow-lg">Submit</button></form></div>
+                        <div><h2 class="text-2xl font-bold text-brand-navy mb-6">Consultation & Info</h2><p class="text-gray-700 mb-6">[Book a consultation or find our contact details below.]</p><div class="space-y-4 text-gray-800"><p><strong>Consultation Types:</strong> [Online, Phone, In-person]</p><p><strong>Available Days:</strong> [Mon/Wed/Fri, 10 AM - 4 PM]</p></div><div class="mt-8 pt-8 border-t border-gray-200"><h3 class="text-xl font-bold text-brand-navy mb-4">Our Office</h3><p class="text-lg">[Your Full Office Address(es)]</p><div class="mt-4 h-64 bg-gray-200 rounded-lg shadow-md overflow-hidden"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3904.779998188168!2d75.1278148147926!3d12.01639969160537!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba46e2f5b4e3e3d%3A0x1f72f2e5e5f5e5e5!2sNileshwar%2C%20Kerala!5e0!3m2!1sen!2sin!4v1688410000000" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="lazy-load"></iframe></div></div></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-brand-navy text-white">
+        <div class="container mx-auto px-4 sm:px-6 py-12">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="col-span-2 md:col-span-1">
+                    <h3 class="text-xl font-bold mb-4">The Board-Man</h3>
+                    <p class="text-gray-300">[A brief, one-sentence mission statement.]</p>
+                    <div class="flex space-x-4 mt-6">
+                        <a href="[#]" class="text-gray-300 hover:text-white transition">LinkedIn</a>
+                        <a href="[#]" class="text-gray-300 hover:text-white transition">Facebook</a>
+                        <a href="[#]" class="text-gray-300 hover:text-white transition">X</a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" onclick="showPage('about')" class="text-gray-300 hover:text-white">About Us</a></li>
+                        <li><a href="#" onclick="showPage('services')" class="text-gray-300 hover:text-white">Services</a></li>
+                        <li><a href="#" onclick="showPage('downloads')" class="text-gray-300 hover:text-white">Downloads</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">[Privacy Policy]</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Contact</h3>
+                    <p class="text-gray-300">[Your Full Office Address]</p>
+                    <p class="mt-2 text-gray-300">Phone: [Your Contact Number]</p>
+                    <p class="mt-2 text-gray-300">Email: [Your Contact Email]</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Business Info</h3>
+                    <p class="text-gray-300">Hours: [Your Business Hours]</p>
+                    <p class="mt-2 text-gray-300">Reg No: [Your Company Registration Number]</p>
+                </div>
+            </div>
+            <div class="mt-10 border-t border-gray-700 pt-6 text-center text-gray-400 text-sm">
+                <p>&copy; <span id="current-year"></span> The Board-Man. All Rights Reserved. | Full Company Name: [Your Full Company Name]</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const pages = document.querySelectorAll('.page-content');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+
+        function showPage(pageId, subId = null) {
+            pages.forEach(page => page.style.display = 'none');
+            const activePage = document.getElementById(`page-${pageId}`);
+            if (activePage) activePage.style.display = 'block';
+
+            navLinks.forEach(link => link.classList.remove('nav-link-active'));
+            const activeNavLink = document.getElementById(`nav-${pageId}`);
+            if (activeNavLink) activeNavLink.classList.add('nav-link-active');
+            
+            if (pageId === 'services' && subId) {
+                const serviceTabs = document.querySelectorAll('.service-tab');
+                serviceTabs.forEach(tab => {
+                    if (tab.dataset.tab === subId) tab.click();
+                });
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (!mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+            }
+        }
+
+        mobileMenuButton.addEventListener('click', () => {
+            const isHidden = mobileMenu.classList.toggle('hidden');
+            if (!isHidden) {
+                mobileMenu.classList.add('mobile-menu-enter');
+            }
+        });
+
+        const serviceTabs = document.querySelectorAll('.service-tab');
+        const tabPanes = document.querySelectorAll('.tab-pane');
+        serviceTabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+                serviceTabs.forEach(t => t.classList.remove('tab-active', 'text-gray-500'));
+                tabPanes.forEach(p => p.style.display = 'none');
+                tab.classList.add('tab-active');
+                tab.classList.remove('text-gray-500');
+                const targetPane = document.getElementById(`tab-${tab.dataset.tab}`);
+                if(targetPane) targetPane.style.display = 'block';
+            });
+        });
+
+        const accordionHeaders = document.querySelectorAll('.accordion-header');
+        accordionHeaders.forEach(header => {
+            header.addEventListener('click', () => {
+                const content = header.nextElementSibling;
+                const icon = header.querySelector('.accordion-icon');
+                const isExpanded = content.style.maxHeight;
+
+                // Optional: Close other accordions
+                // accordionHeaders.forEach(h => {
+                //     h.nextElementSibling.style.maxHeight = null;
+                //     h.querySelector('.accordion-icon').textContent = '+';
+                // });
+
+                if (isExpanded) {
+                    content.style.maxHeight = null;
+                    icon.textContent = '+';
+                } else {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    icon.textContent = '−';
+                }
+            });
+        });
+
+        // Lazy Loading for images and iframes
+        const lazyElements = document.querySelectorAll('.lazy-load');
+        const lazyObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    if (el.tagName === 'IMG' || el.tagName === 'IFRAME') {
+                        if (el.dataset.src) {
+                           el.src = el.dataset.src;
+                        }
+                    }
+                    el.classList.add('loaded');
+                    observer.unobserve(el);
+                }
+            });
+        }, { rootMargin: '0px 0px 100px 0px' });
+        lazyElements.forEach(el => lazyObserver.observe(el));
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showPage('home');
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+        });
+    </script>
+</body>
+</html>
